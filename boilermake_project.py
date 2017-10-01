@@ -1,3 +1,9 @@
+import plotly
+import plotly.plotly as py
+import plotly.figure_factory as ff
+import plotly.graph_objs as go
+plotly.tools.set_credentials_file(username='lechris1', api_key='pUnU4LIH9XjDK1rf91dH')
+
 fp = open("cad-events-boilermake-partial.csv")
 
 badge_dict = {}
@@ -50,7 +56,55 @@ if search[1] in badge_dict:
         Cad2_info.append(disp_type_tup)
 else:
     print("ERROR: CadUnit not found")
-    
-print(Cad_info)
-print(Cad2_info)
+
+
+# Set table
+
+first = []
+first_percents = []
+for i in range(len(Cad_info)):
+    row = [search[0],Cad_info[i][0], len(Cad_info[i][2])]
+    first.append(row)
+    first_percents.append(Cad_info[i][1])
+
+second= []
+second_percents = []
+for i in range(len(Cad2_info)):
+    row = [search[1],Cad2_info[i][0], len(Cad2_info[i][2])]
+    second.append(row)
+    second_percents.append(Cad2_info[i][1])
+               
+data_matrix = [['CadUnit','Dispatch Type','Number of Occurances']]
+
+for item in first:
+    data_matrix.append(item)
+
+for item in second:
+    data_matrix.append(item)
+
+table = ff.create_table(data_matrix)
+py.plot(table, filename='simple_table')
+
+# Set pie chart 1
+
+labels1 = []
+values1 = first_percents
+
+for i in range(len(first)):
+    labels1.append(first[i][1])
+
+trace = go.Pie(labels=labels1, values=values1)
+py.plot([trace], filename='basic_pie_chart1')
+
+# Set pie chart 2
+
+labels2 = []
+values2 = second_percents
+
+for i in range(len(second)):
+    labels2.append(second[i][1])
+
+trace = go.Pie(labels=labels2 values=values2)
+py.plot([trace], filename='basic_pie_chart2')
+
 fp.close()
